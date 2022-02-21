@@ -1,0 +1,36 @@
+POSTGRES
+sudo apt install postgresql postgresql-contrib
+psql -U postgres
+CREATE USER django WITH PASSWORD 'ifb_pass' NOCREATEDB;
+\du
+create database ifb_db;
+\l
+\c ifb_db
+\dt
+\d table_name
+
+DJANGO
+pip install djangorestframework
+pip install psycopg2-binary
+pip install django-cors-headers
+
+python manage.py makemigrations ifbApp
+python manage.py migrate ifbApp
+
+python manage.py runserver 8080
+
+ANGULAR
+
+
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+sudo apt-get install -y nodejs
+npm -v and then depending if you have npm or not:
+	sudo apt install npm
+	sudo npm install npm@latest
+
+sudo npm install -g @angular/cli
+
+potencjalnie najpierw 
+	ng new ifbAngular (=> Y, CSS)
+	
+ng serve --port 881

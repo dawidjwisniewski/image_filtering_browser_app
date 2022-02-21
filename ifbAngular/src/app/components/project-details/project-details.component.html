@@ -1,0 +1,60 @@
+<div>
+    <div *ngIf="currentProject.id" class="edit-form">
+        <h4>Project</h4>
+        <form>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    [(ngModel)]="currentProject.name"
+                    name="name"
+                />
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="description"
+                    [(ngModel)]="currentProject.description"
+                    name="description"
+                />
+            </div>
+            <div class="form-group">
+                <label for="created_at">Creation date:</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="created_at"
+                    [(ngModel)]="currentProject.created_at"
+                    name="created_at"
+                    [readonly]=true
+                />
+            </div>
+            <div class="form-group">
+                <label for="updated_at">Last edited:</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="updated_at"
+                    [(ngModel)]="currentProject.updated_at"
+                    name="updated_at"
+                    [readonly]=true
+                />
+            </div>
+        </form>
+        <button type="submit" class="badge badge-success mr-2" (click)="updateProject()">
+            Update project
+        </button>
+        <button class="badge badge-danger mr-2" (click)="deleteProject()">
+            Delete project
+        </button>
+        <p> {{message}}</p>
+    </div>
+    <div *ngIf="!currentProject.id">
+        <br />
+        <p> Cannot access this Project</p>
+    </div>
+</div>

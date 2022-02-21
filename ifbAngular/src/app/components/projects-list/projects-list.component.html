@@ -1,0 +1,60 @@
+<div class="list row">
+    <div class="col-md-8">
+        <div class="input-group mb-3">
+            <input
+                type = "text"
+                class = "form-control"
+                placeholder="Search projects by name"
+                [(ngModel)]="name"
+                (keyup.enter)="searchName()"
+            />
+            <div class="input-group-append">
+                <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    (click)="searchName()">
+                Search
+                </button>
+                    <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    (click)="retrieveProjects()">
+                Show all
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h4>Project list</h4>
+        <ul class="list-group">
+            <li
+                class="list-group-item"
+                *ngFor="let project of projects; let i = index"
+                [class.active]="i == currentIndex"
+                (click)="setActiveProject(project,i)"
+            >
+            {{ project.name}}
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <div *ngIf="currentProject.id">
+            <h4>Project</h4>
+            <div>
+                <label><strong>Name:</strong></label> {{ currentProject.name }}
+            </div>
+            <div>
+                <label><strong>Description:</strong></label> {{ currentProject.description}}
+            </div>
+            <div>
+                <label><strong>Creation date:</strong></label> {{ currentProject.created_at}}
+            </div>
+            <div>
+                <label><strong>Last edited:</strong></label> {{ currentProject.updated_at}}
+            </div>
+            <a class="badge badge-warning" routerLink="/ifbapp/editProject/{{ currentProject.id}}">
+                Edit project information
+            </a>
+        </div>
+    </div>
+</div>
