@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,6 +10,10 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { UserService } from './services/user.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { NavbarModule, WavesModule } from 'angular-bootstrap-md';
+
 
 @NgModule({
   declarations: [
@@ -21,9 +26,12 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MDBBootstrapModule.forRoot(),
+    BrowserAnimationsModule,
+    NavbarModule
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

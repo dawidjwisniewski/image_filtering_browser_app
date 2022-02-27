@@ -1,5 +1,5 @@
-<div class="list row">
-    <div class="col-md-8">
+<div class="row">
+    <div class="col-6">
         <div class="input-group mb-3">
             <input
                 type = "text"
@@ -7,15 +7,16 @@
                 placeholder="Search projects by name"
                 [(ngModel)]="name"
                 (keyup.enter)="searchName()"
+                aria-describedby="basic-addon1"
             />
             <div class="input-group-append">
-                <button
+                <button 
                     class="btn btn-outline-secondary"
                     type="button"
                     (click)="searchName()">
                 Search
                 </button>
-                    <button
+                    <button 
                     class="btn btn-outline-secondary"
                     type="button"
                     (click)="retrieveProjects()">
@@ -24,7 +25,10 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+</div>
+<div class="row justify-content-start">
+
+    <div class="col-6">
         <h4>Project list</h4>
         <ul class="list-group">
             <li
@@ -37,7 +41,7 @@
             </li>
         </ul>
     </div>
-    <div class="col-md-6">
+    <div class="col-4">
         <div *ngIf="currentProject.id">
             <h4>Project</h4>
             <div>
@@ -52,9 +56,12 @@
             <div>
                 <label><strong>Last edited:</strong></label> {{ currentProject.updated_at}}
             </div>
-            <a class="badge badge-warning" routerLink="/ifbapp/editProject/{{ currentProject.id}}">
+            <button 
+                class="btn btn-warning"
+                type="button"
+                routerLink="/ifbapp/editProject/{{ currentProject.id}}">
                 Edit project information
-            </a>
+            </button>
         </div>
     </div>
 </div>

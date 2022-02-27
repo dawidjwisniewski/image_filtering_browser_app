@@ -22,11 +22,13 @@
                     name="description"
                 />
             </div>
-            <button (click)="saveProject()" class="btn btn-success">Save the New Project</button>
+            <div class="form-group">
+                <button (click)="saveProject()" class="btn btn-primary">Save the New Project</button>
+            </div>
         </div>
         <div *ngIf="submitted">
             <h4>Project was created successfully</h4>
-            <button class="btn btn-success" (click)="newProject()">Add another New Project</button>
+            <button class="btn btn-warning" (click)="newProject()">Add another New Project</button>
         </div>
     </div>
 </div>

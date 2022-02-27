@@ -1,14 +1,62 @@
-<div>
-  <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a href="#" class="'navbar-brand">DW</a>
-    <div class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a routerLink="ifbapp" class="nav-link">Projects</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="ifbapp/addProject" class="nav-link">Add Project</a>
-      </li>
+<div *ngIf="!ifbappService.token">
+  <div class="container mt-3">
+    <div class="submit-form  mt-3">
+      <h2>Log In</h2>
+      <div class="form-group">
+        <label for="login-username">Username</label>
+        <input
+            type="text"
+            class="form-control"
+            id="login-username"
+            required
+            [(ngModel)]="user.username"
+            name="login-username"
+        />
+        <span *ngFor="let error of ifbappService.errors.username"><br />
+          {{ error }}</span>
+      <div class="form-group">
+          <label for="login-password">Password</label>
+          <input
+              type="password"
+              class="form-control"
+              id="login-password"
+              [(ngModel)]="user.password"
+              name="login-password"
+          />
+          <span *ngFor="let error of ifbappService.errors.password"><br />
+            {{ error }}</span>
+          </div>
+      </div>
+      <div class="form-group">
+        <button (click)="login()" class="btn btn-primary">Log In</button>
+      </div>
     </div>
+  </div>
+</div>
+
+<div *ngIf="ifbappService.token">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark" > -->
+    <a href="#" class="navbar-brand">Image Filtering Browser App</a>
+    <ul class="navbar-nav mr-auto">  
+        <li class="nav-item">
+          <a routerLink="ifbapp" class="nav-link">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="ifbapp/addProject" class="nav-link">Add Project</a>
+        </li>
+    </ul>
+    <ul class="col-mr-6">
+      <div class="navbar-nav mr-auto">
+        <!-- <span class="tab"></span> -->
+        <li class="nav-item">
+          <span class="navbar-text">You are logged in as {{ ifbappService.username }}</span>        
+        </li>
+        <li class="nav-item ">
+          <a (click)="logout()" class="nav-link active"> Log Out</a>
+        </li>
+      </div>
+    </ul>
   </nav>
   <div class="container mt-3">
     <router-outlet></router-outlet>
