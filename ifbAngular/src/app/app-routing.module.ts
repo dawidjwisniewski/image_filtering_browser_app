@@ -4,12 +4,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { AddProjectComponent } from './components/add-project/add-project.component';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { ProjectsListComponent } from './components/projects-list/projects-list.component';
+import { AddProjectDataComponent } from './components/add-project-data/add-project-data.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'ifbapp', pathMatch: 'full'},
   {path: 'ifbapp', component: ProjectsListComponent},
   {path: 'ifbapp/addProject', component: AddProjectComponent},
   {path: 'ifbapp/editProject/:projectId', component: ProjectDetailsComponent},
+  {path: 'ifbapp/addProjectData/:projectId', component: AddProjectDataComponent},
 ];
 
 @NgModule({

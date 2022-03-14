@@ -7,8 +7,10 @@ import { AppComponent } from './app.component';
 import { AddProjectComponent } from './components/add-project/add-project.component';
 import { ProjectsListComponent } from './components/projects-list/projects-list.component';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
+import { AddProjectDataComponent } from './components/add-project-data/add-project-data.component';
 
-import { FormsModule } from '@angular/forms';
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './services/user.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
@@ -20,18 +22,20 @@ import { NavbarModule, WavesModule } from 'angular-bootstrap-md';
     AppComponent,
     AddProjectComponent,
     ProjectsListComponent,
-    ProjectDetailsComponent
+    ProjectDetailsComponent,
+    AddProjectDataComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     MDBBootstrapModule.forRoot(),
     BrowserAnimationsModule,
     NavbarModule
   ],
-  providers: [UserService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

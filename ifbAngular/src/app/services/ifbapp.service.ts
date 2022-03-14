@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 // import { UserService } from './user.service';
 import { Project } from '../models/project.model';
@@ -14,7 +14,7 @@ export class IfbappService {
   
   // http options used for making API calls
   private httpOptions: any;
-
+  
   // the actual JWT token
   public token: string ='';
  
@@ -55,6 +55,37 @@ export class IfbappService {
   findProjectByName(name: any): Observable<Project[]> {
     return this.http.get<Project[]>(`${baseUrl}?name=${name}`);
   }
+
+  addProjectDataCsv(id: any, formData: any): Observable<any> {
+    // return this.http.post<any>(`${baseUrl}/uploadCSV/${id}`, formData)
+    const req = new HttpRequest('POST', `${baseUrl}/uploadCSV/${id}`, formData, {
+      headers: new HttpHeaders({
+        // 'Content-Type': 'application/json',
+        //'Content-Type': 'multipart/form-data',
+        'Authorization': 'JWT ' + this.token
+      }),
+      reportProgress: true,
+      responseType: 'json',
+      // withCredentials: true,
+    });
+    return this.http.request(req);
+  }
+  addProjectDataImage(id: any, formData: any): Observable<any> {
+    // return this.http.post<any>(`${baseUrl}/uploadCSV/${id}`, formData)
+    const req = new HttpRequest('POST', `${baseUrl}/uploadImages/${id}`, formData, {
+      headers: new HttpHeaders({
+        // 'Content-Type': 'application/json',
+        //'Content-Type': 'multipart/form-data',
+        'Authorization': 'JWT ' + this.token
+      }),
+      reportProgress: true,
+      responseType: 'json'
+    });
+    return this.http.request(req);
+  }
+
+
+
   loginRequest(user: any): Observable<any> {
     return this.http.post(loginUrl, user, this.httpOptions);
   }

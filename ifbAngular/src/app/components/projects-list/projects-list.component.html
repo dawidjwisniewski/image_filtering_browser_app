@@ -57,6 +57,12 @@
                 <label><strong>Last edited:</strong></label> {{ currentProject.updated_at}}
             </div>
             <button 
+                class="btn btn-primary"
+                type="button"
+                routerLink="/ifbapp/addProjectData/{{ currentProject.id}}">
+                Add project data
+            </button>
+            <button 
                 class="btn btn-warning"
                 type="button"
                 routerLink="/ifbapp/editProject/{{ currentProject.id}}">
