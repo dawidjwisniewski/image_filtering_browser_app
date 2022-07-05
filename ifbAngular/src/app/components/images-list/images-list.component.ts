@@ -4,6 +4,14 @@ import { IfbappService } from 'src/app/services/ifbapp.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 
+function createImagesArray(originalArray: Array<any>, numberOfColumns : number): any {
+  var arrayOfArrays: Array<Array<any>> = [];
+  let numberOfRows = originalArray.length / numberOfColumns; 
+  for(var i = 0; i < numberOfRows; i++) {
+    arrayOfArrays.push(originalArray.slice(i * numberOfColumns , (i+1) * numberOfColumns))
+  }
+  return arrayOfArrays;
+}
 
 @Component({
   selector: 'app-images-list',
@@ -60,6 +68,7 @@ export class ImagesListComponent implements OnInit {
   }
 
   getProject(project_id: string): void {
+    this.project_id = project_id
     this.ifbappService.getProjectDetails(project_id)
     .subscribe({
       next: data => {
@@ -72,15 +81,10 @@ export class ImagesListComponent implements OnInit {
     );
   }
 
+
+  
   retrieveImages(project_id: string): void {
-    function createImagesArray(originalArray: Array<any>, numberOfColumns : number): any {
-      var arrayOfArrays: Array<Array<any>> = [];
-      let numberOfRows = originalArray.length / numberOfColumns; 
-      for(var i = 0; i < numberOfRows; i++) {
-        arrayOfArrays.push(originalArray.slice(i * numberOfColumns , (i+1) * numberOfColumns))
-      }
-      return arrayOfArrays;
-    }
+    // function was here before
     
     this.ifbappService.getAllImages(project_id)
       .subscribe({
@@ -172,9 +176,11 @@ export class ImagesListComponent implements OnInit {
       let currentFilter = this.imageFiltersObject[i]
       if (currentFilter.value) {
         if (this.filterExpression.length >0) this.filterExpression += "&"
+        // this.filterExpression += "'"
         this.filterExpression += currentFilter.variable;
         this.filterExpression += "="
         this.filterExpression += currentFilter.value;
+        // this.filterExpression += "'"
       }
     }
     for (let i = 0; i < this.imageFiltersBool.length; i++) {
@@ -191,9 +197,9 @@ export class ImagesListComponent implements OnInit {
       if (currentFilter.min || currentFilter.max) {
         if (this.filterExpression.length >0) this.filterExpression += "&"
         this.filterExpression += currentFilter.variable;
-        this.filterExpression += ">="
+        this.filterExpression += "="
         this.filterExpression += currentFilter.min;
-        this.filterExpression += "<="
+        this.filterExpression += "^"
         this.filterExpression += currentFilter.max;
       }
     }
@@ -202,16 +208,29 @@ export class ImagesListComponent implements OnInit {
       if (currentFilter.min || currentFilter.max) {
         if (this.filterExpression.length >0) this.filterExpression += "&"
         this.filterExpression += currentFilter.variable;
-        this.filterExpression += ">="
+        this.filterExpression += "="
         this.filterExpression += currentFilter.min;
-        this.filterExpression += "<="
+        this.filterExpression += "%"
         this.filterExpression += currentFilter.max;
       }
     }
-
+    this.filterExpression += "#"
     console.log(this.filterExpression)
-
-    // add querry to backend
+    
+    // Querry to backed
+    // this.currentProject = {};
+    // this.currentIndex = -1;
+    this.ifbappService.getFilteredImages(this.project_id, this.filterExpression)
+      .subscribe({
+        next: data => {
+          this.images = createImagesArray(data, this.numberOfColumns);
+          console.log(data);
+        },
+        error: error => {
+          console.log(error);
+        }
+      }
+      );
 
   }
 

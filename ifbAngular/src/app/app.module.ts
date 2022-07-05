@@ -12,7 +12,7 @@ import { AddProjectDataComponent } from './components/add-project-data/add-proje
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { UserService } from './services/user.service';
+// import { UserService } from './services/user.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { NavbarModule, WavesModule } from 'angular-bootstrap-md';
 import { ImagesListComponent } from './components/images-list/images-list.component';
