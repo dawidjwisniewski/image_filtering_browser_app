@@ -1,0 +1,131 @@
+<div class="container-fluid">
+    <div class="row justify-content-start">
+        <div class="col-2">
+            <h2>Filters</h2>
+
+            <form>
+                <h3> Text Variables </h3>
+                <div class="form-group" *ngFor="let filter of imageFiltersObject">
+                    
+                    <label for="filter.variable" style="font-size:120%; display:flex; flex-direction: row; align-items: center">
+                        {{filter.variable}}
+                        <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            id="{{filter.variable}}"
+                            [(ngModel)]="filter.value"
+                            name="{{filter.variable}}"
+                            style="margin-left:20px;"
+                        />
+                    </label>
+                </div>
+
+                <h3> Binnary Variables </h3>
+                <div class="form-group" *ngFor="let filter of imageFiltersBool">
+                    
+                    <label for="filter.variable" style="font-size:120%; display:flex; flex-direction: row; ">
+                        {{filter.variable}}
+
+                        <label style="font-size:110%; display:flex; flex-direction: row; align-items: center; margin-left:20px; margin-right: 10px;">
+                        <input type="radio" 
+                            class="form-control form-control-sm"
+                            name="{{filter.variable}}" [(ngModel)]="filter.value" value="False"
+                            style="font-size: 90%; margin-right: 5px;"
+                            >
+                            No
+                        </label>
+                        <label style="font-size:110%; display:flex; flex-direction: row; align-items: center" >
+                        <input type="radio"
+                            class="form-control form-control-sm"
+                            name="{{filter.variable}}" [(ngModel)]="filter.value" value="True"
+                            style="font-size: 90%; margin-right: 5px;"
+                            >
+                            Yes
+                        </label>
+                    </label>
+                    
+                </div>
+
+                <h3> Numeric Variables </h3>
+                <div class="form-group" *ngFor="let filter of imageFiltersInt64">
+                    
+                    <label for="filter.variable" style="font-size:120%; display:flex; flex-direction: row; align-items: center">
+                        {{filter.variable}}
+                        <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            id="{{filter.variable}}_min"
+                            [(ngModel)]="filter.min"
+                            name="{{filter.variable}}_min"
+                            style="margin-left:20px; margin-right: 5px;"
+                        />
+                        - 
+                        <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            id="{{filter.variable}}_max"
+                            [(ngModel)]="filter.max"
+                            name="{{filter.variable}}_max"
+                            style="margin-left:5px;"
+                        />
+                    </label>
+
+                </div>
+
+                <div class="form-group" *ngFor="let filter of imageFiltersFloat64">
+                    
+                    <label for="filter.variable" style="font-size:120%; display:flex; flex-direction: row; align-items: center">
+                        {{filter.variable}}
+                        <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            id="{{filter.variable}}_min"
+                            [(ngModel)]="filter.min"
+                            name="{{filter.variable}}_min"
+                            style="margin-left:20px; margin-right: 5px;"
+                        />
+                        - 
+                        <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            id="{{filter.variable}}_max"
+                            [(ngModel)]="filter.max"
+                            name="{{filter.variable}}_max"
+                            style="margin-left:5px;"
+                        />
+                    </label>
+
+                </div>
+            </form>
+
+
+            <button type="submit" class="btn btn-success" (click)="applyFilters()">
+                Filter
+            </button> 
+            <button class="btn btn-danger" (click)="removeFilters()">
+                Remove filters
+            </button>
+
+        </div>
+
+
+        
+        <div class="col-10">
+            <h2>Images</h2>
+            <ul class="list-group" *ngFor="let rowOfImages of images">
+
+                <ul class="list-group list-group-horizontal-md">
+                <li  class="list-group-item "
+                    *ngFor="let image of rowOfImages"
+                    [class.active]="image.file_name == currentImage.file_name"
+                    (click)="setActiveImage(image)"
+                    style="text-align:center"
+                    >
+                <img [src]="image.final_location" [ngStyle]="{'width.px': maxImageWidth}">
+                <br>
+                {{ image.file_name}}
+                </li>
+            </ul>
+        </ul>   
+    </div>
+</div>
