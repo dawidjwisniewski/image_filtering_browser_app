@@ -13,7 +13,9 @@ urlpatterns = [
     re_path(r'^api/ifbapp$', views.project_list),
     re_path(r'^api/ifbapp/(?P<pk>[0-9]+)$', views.project_details),
     
-    #addomg data
+    #adding data
     re_path(r'^api/ifbapp/uploadCSV/(?P<pk>[0-9]+)$', views.upload_csv_file),
-    re_path(r'^api/ifbapp/uploadImages/(?P<pk>[0-9]+)$', views.upload_images),
+    re_path(r'^api/ifbapp/imagesData/(?P<pk>[0-9]+)$', views.image_datapoint),
+    re_path(r'^api/ifbapp/imagesMetaData/(?P<pk>[0-9]+)$', views.image_datapointmetadata),
+    re_path(r'^api/ifbapp/images/(?P<pk>[0-9]+)$', views.image_list),
 ]

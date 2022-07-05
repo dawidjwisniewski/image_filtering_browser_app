@@ -9,6 +9,9 @@ import pandas as pd
 
 file_location = "./data/"
 temp_file_location = f"{file_location}temp/"
+angular_assets_location = "ifbAngular/src/"
+angular_image_location_relative = "assets/project_images/"
+
 
 def make_sure_folder_exists(path):
     if not os.path.exists(path): 
@@ -74,11 +77,15 @@ def handle_uploaded_csv_file(project_id, file):
 
 def handle_uploaded_image(project_id, file):
     
+    angular_assets_location
+    angular_image_location_relative
+
+
     # write file
-    final_image_location = f'{file_location}{project_id}'
+    final_image_location = f'{angular_assets_location}{angular_image_location_relative}{project_id}'
     make_sure_folder_exists(final_image_location)
     file_name = file.name
-    final_image_location_with_filename = f'{final_image_location}/{original_name}'
+    final_image_location_with_filename = f'{final_image_location}/{file_name}'
     with open(final_image_location_with_filename, 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
@@ -86,7 +93,7 @@ def handle_uploaded_image(project_id, file):
     # create database entry
     image_data = {
             'file_name': file_name,
-            'final_location': final_image_location_with_filename,
+            'final_location': f'{angular_image_location_relative}{project_id}/{file_name}',
         }
     image = Image(**image_data)
     image.project_id = project_id

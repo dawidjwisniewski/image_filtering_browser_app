@@ -1,10 +1,11 @@
+#from tkinter import Image
 from django.shortcuts import render
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 
-from ifbapp.models import Project
-from ifbapp.serializers import ProjectSerializer
+from ifbapp.models import ImageDatapoint, ImageDatapointMetadata, Project, Image
+from ifbapp.serializers import ProjectSerializer, ImageSerializer, ImageDatapointSerializer, ImageDatapointMetadataSerializer
 from rest_framework.decorators import api_view
 
 from .handle_uploaded_files import handle_uploaded_csv_file, handle_uploaded_image
@@ -66,11 +67,17 @@ def project_details(request, pk):
 @api_view(['POST'])
 def upload_csv_file(request, pk):
     try:
-        project_id = pk
-    except:
+        project = Project.objects.get(pk=pk)
+    except Project.DoesNotExist:
         return JsonResponse({'message': "The project does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
+    imagedata = ImageDatapoint.objects.filter(project_id=pk)
+    imagedatametadata = ImageDatapointMetadata.objects.filter(project_id=pk)
+
+    project_id = pk
     if request.method == 'POST':
+        imagedata.delete()
+        imagedatametadata.delete()
         handle_uploaded_csv_file(project_id,request.FILES['file'])
         return JsonResponse({'message': 'File upload successfull!'})
         # try:
@@ -82,16 +89,61 @@ def upload_csv_file(request, pk):
         form = UploadFileForm()
         return JsonResponse({'message': 'File upload failed - POST not sent'})
 
-@api_view(['POST'])
-def upload_images(request, pk):
+@api_view(['GET'])
+def image_datapoint(request, pk):
     try:
-        project_id = pk
-    except:
+        project = Project.objects.get(pk=pk)
+    except Project.DoesNotExist:
         return JsonResponse({'message': "The project does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
+    if request.method == 'GET':
+        
+        image_datapoints = ImageDatapoint.objects.filter(project_id=pk)
+
+        image_datapoints_serializer = ImageDatapointSerializer(image_datapoints, many=True)
+        return JsonResponse(image_datapoints_serializer.data, safe=False)
+
+@api_view(['GET'])
+def image_datapointmetadata(request, pk):
+    try:
+        project = Project.objects.get(pk=pk)
+    except Project.DoesNotExist:
+        return JsonResponse({'message': "The project does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':        
+        image_datapointmetadata = ImageDatapointMetadata.objects.filter(project_id=pk)
+
+        # var_type = request.GET.get('var_type', None)
+        
+        # if var_type is not None:
+        #     image_datapointmetadata = image_datapointmetadata.filter(variable_type=var_type)
+
+        image_datapointsmetadata_serializer = ImageDatapointMetadataSerializer(image_datapointmetadata, many=True)
+        return JsonResponse(image_datapointsmetadata_serializer.data, safe=False)
+
+@api_view(['GET', 'POST'])
+def image_list(request, pk):
+    try:
+        project = Project.objects.get(pk=pk)
+    except Project.DoesNotExist:
+        return JsonResponse({'message': "The project does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    project_id = pk
+    image_data = Image.objects.filter(project_id=pk)
+
+    if request.method == 'GET':
+        
+        # add filtering option here?
+
+        image_serializer = ImageSerializer(image_data, many=True)
+        return JsonResponse(image_serializer.data, safe=False)
+
     if request.method == 'POST':
+        
         files = request.FILES.getlist('file')
         for file in files:
+            duplicate_image_data =  image_data.filter(file_name=file.name)
+            duplicate_image_data.delete()
             handle_uploaded_image(project_id,file)
         return JsonResponse({'message': 'File upload successfull!'})
 

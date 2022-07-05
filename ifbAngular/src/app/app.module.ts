@@ -15,6 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './services/user.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { NavbarModule, WavesModule } from 'angular-bootstrap-md';
+import { ImagesListComponent } from './components/images-list/images-list.component';
+
 
 
 @NgModule({
@@ -23,7 +25,8 @@ import { NavbarModule, WavesModule } from 'angular-bootstrap-md';
     AddProjectComponent,
     ProjectsListComponent,
     ProjectDetailsComponent,
-    AddProjectDataComponent
+    AddProjectDataComponent,
+    ImagesListComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +36,8 @@ import { NavbarModule, WavesModule } from 'angular-bootstrap-md';
     HttpClientModule,
     MDBBootstrapModule.forRoot(),
     BrowserAnimationsModule,
-    NavbarModule
+    NavbarModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

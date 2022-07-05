@@ -37,6 +37,11 @@ npm -v and then depending if you have npm or not:
 	sudo npm install npm@latest
 
 sudo npm install -g @angular/cli
+npm install @angular/cdk --save
+npm install angular-bootstrap-md --save --force
+npm install -–save chart.js@2.5.0 @types/chart.js @fortawesome/fontawesome-free hammerjs animate.css
+ng add @angular/material
+
 
 potencjalnie najpierw 
 	ng new ifbAngular (=> Y, CSS)

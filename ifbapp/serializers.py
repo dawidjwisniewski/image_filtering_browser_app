@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ifbapp.models import Image, Project
+from ifbapp.models import Image, Project, ImageDatapoint, ImageDatapointMetadata
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +19,31 @@ class ImageSerializer(serializers.ModelSerializer):
             'project',
             'file_name',
             'final_location',
+            'created_at',
+            'updated_at',
+        )
+
+class ImageDatapointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageDatapoint
+        fields = (
+            'project', 
+            'file_name', 
+            'variable', 
+            'value', 
+            'created_at', 
+            'updated_at', 
+        )
+
+class ImageDatapointMetadataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageDatapointMetadata
+        fields = (
+            'project',
+            'variable',
+            'variable_type',
+            'min',
+            'max',
             'created_at',
             'updated_at',
         )

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 // import { UserService } from './user.service';
-import { Project } from '../models/project.model';
+import { Image, ImageDatapointMetadata, Project } from '../models/project.model';
 const baseUrl = 'http://localhost:8080/api/ifbapp';
 const loginUrl = 'http://localhost:8080/api/token';
 
@@ -55,6 +55,15 @@ export class IfbappService {
   findProjectByName(name: any): Observable<Project[]> {
     return this.http.get<Project[]>(`${baseUrl}?name=${name}`);
   }
+  getAllImages(project_id: any): Observable<Image[]> {
+    return this.http.get<Image[]>(`${baseUrl}/images/${project_id}`);
+  }
+  getFilters(project_id: any): Observable<ImageDatapointMetadata[]> {
+    return this.http.get<ImageDatapointMetadata[]>(`${baseUrl}/imagesMetaData/${project_id}`);
+  }
+  getFiltersOfType(project_id: any, var_type: String): Observable<ImageDatapointMetadata[]> {
+    return this.http.get<ImageDatapointMetadata[]>(`${baseUrl}/imagesMetaData/${project_id}?var_type=${var_type}`);
+  }
 
   addProjectDataCsv(id: any, formData: any): Observable<any> {
     // return this.http.post<any>(`${baseUrl}/uploadCSV/${id}`, formData)
@@ -72,7 +81,7 @@ export class IfbappService {
   }
   addProjectDataImage(id: any, formData: any): Observable<any> {
     // return this.http.post<any>(`${baseUrl}/uploadCSV/${id}`, formData)
-    const req = new HttpRequest('POST', `${baseUrl}/uploadImages/${id}`, formData, {
+    const req = new HttpRequest('POST', `${baseUrl}/images/${id}`, formData, {
       headers: new HttpHeaders({
         // 'Content-Type': 'application/json',
         //'Content-Type': 'multipart/form-data',
