@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
+import re
 
 from ifbapp.models import ImageDatapoint, ImageDatapointMetadata, Project, Image
 from ifbapp.serializers import ProjectSerializer, ImageSerializer, ImageDatapointSerializer, ImageDatapointMetadataSerializer
@@ -133,7 +134,30 @@ def image_list(request, pk):
 
     if request.method == 'GET':
         
-        # add filtering option here?
+#fix this - only first filter gets through
+
+        filter_string = request.GET.get('filter', None) 
+        print(filter_string)
+        if filter_string is not None:
+            filter_list = filter_string.split("&")
+            print(filter_list)
+            for filter in filter_list:
+                filter_array=re.split("[=^]", filter)
+                print(filter_array)
+                variable_name = filter_array[0]
+                
+                #get type of variable from db
+
+                    # search_string = filter_array[0].replace("%20", " ")
+                    # search_type = 'icontains'
+                    # filter_expression = variable_name + '__' + search_type             
+                    # image_data = image_data.filter(**{ filter_expression: search_string })
+
+                    #Bool - btw check type of Bool in DB
+                    #balues
+                
+                    
+            # add filtering option here?
 
         image_serializer = ImageSerializer(image_data, many=True)
         return JsonResponse(image_serializer.data, safe=False)
