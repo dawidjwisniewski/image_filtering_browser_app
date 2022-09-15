@@ -130,28 +130,44 @@ def image_list(request, pk):
         return JsonResponse({'message': "The project does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
     project_id = pk
-    image_data = Image.objects.filter(project_id=pk)
+    images = Image.objects.filter(project_id=pk)
 
     if request.method == 'GET':
         
 #fix this - only first filter gets through
 
         filter_string = request.GET.get('filter', None) 
-        print(filter_string)
+        # print(filter_string)
         if filter_string is not None:
-            filter_list = filter_string.split("&")
-            print(filter_list)
+            image_datapoints = ImageDatapoint.objects.filter(project_id=pk)
+            image_datapointmetadata = ImageDatapointMetadata.objects.filter(project_id=pk)
+
+            filter_list = filter_string.split(";")
+            # print(filter_list)
             for filter in filter_list:
                 filter_array=re.split("[=^]", filter)
                 print(filter_array)
+                # images.values("file_name").distinct()
                 variable_name = filter_array[0]
                 
                 #get type of variable from db
+                data_type = list(image_datapointmetadata.filter(project_id=pk)\
+                    .filter(variable=variable_name).values("variable_type"))[0].get("variable_type")
 
-                    # search_string = filter_array[0].replace("%20", " ")
-                    # search_type = 'icontains'
-                    # filter_expression = variable_name + '__' + search_type             
-                    # image_data = image_data.filter(**{ filter_expression: search_string })
+                if data_type in ["object","bool"]:
+                    filter_criteria = {
+                        "variable__iexact": filter_array[0],
+                        "value__icontains": filter_array[1]
+                    }                    
+                    curent_filter_image_datapoints = image_datapoints.filter(**filter_criteria)
+                    list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
+                    print(list_of_files_matching_filter)
+                    images=images.filter(file_name__in=list_of_files_matching_filter)
+                elif data_type in ["int64", "bool64"]:
+                    pass
+                # bool int64 bool64
+
+
 
                     #Bool - btw check type of Bool in DB
                     #balues
@@ -159,14 +175,14 @@ def image_list(request, pk):
                     
             # add filtering option here?
 
-        image_serializer = ImageSerializer(image_data, many=True)
+        image_serializer = ImageSerializer(images, many=True)
         return JsonResponse(image_serializer.data, safe=False)
 
     if request.method == 'POST':
         
         files = request.FILES.getlist('file')
         for file in files:
-            duplicate_image_data =  image_data.filter(file_name=file.name)
+            duplicate_image_data =  images.filter(file_name=file.name)
             duplicate_image_data.delete()
             handle_uploaded_image(project_id,file)
         return JsonResponse({'message': 'File upload successfull!'})
