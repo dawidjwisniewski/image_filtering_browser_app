@@ -60,6 +60,7 @@ coverage.xml
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+ifbapp/migrations
 
 # Flask stuff:
 instance/
@@ -84,6 +85,7 @@ ipython_config.py
 # pyenv
 .python-version
 
+
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
 #   However, in case of collaboration, if having platform-specific dependencies or dependencies
@@ -93,6 +95,9 @@ ipython_config.py
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
+
+# VSCode
+*.code-workspace
 
 # Celery stuff
 celerybeat-schedule
@@ -109,6 +114,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.ifbrowser_env/
+
 
 # Spyder project settings
 .spyderproject
@@ -132,3 +139,8 @@ dmypy.json
 .angular/
 .vscode/
 node_modules/
+
+# test data and real data
+tests/
+data/
+ifbAngular/src/assets/project_images/
