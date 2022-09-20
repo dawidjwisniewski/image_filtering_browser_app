@@ -46,7 +46,7 @@ export class ImagesListComponent implements OnInit {
 
   // filtersToApply: { [variable: string] : filterCriteria; } = {};
 
-  numberOfColumns =3;
+  numberOfColumns =5;
 
   maxImageWidth = 200;
 
@@ -58,7 +58,6 @@ export class ImagesListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.maxImageWidth = window.innerWidth * 0.7 / this.numberOfColumns;
     // this.message = '';
     this.getProject(this.route.snapshot.params['projectId']);
     //console.log("Project id2: "+this.route.snapshot.params['projectId']);
@@ -85,7 +84,8 @@ export class ImagesListComponent implements OnInit {
   
   retrieveImages(project_id: string): void {
     // function was here before
-    
+    this.maxImageWidth = window.innerWidth * 0.6 / this.numberOfColumns;
+
     this.ifbappService.getAllImages(project_id)
       .subscribe({
         next: data => {

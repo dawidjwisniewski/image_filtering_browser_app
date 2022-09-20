@@ -111,21 +111,46 @@
 
         
         <div class="col-10">
-            <h2>Images</h2>
-            <ul class="list-group" *ngFor="let rowOfImages of images">
+            <div class="row justify-content-between">
+                <div class="col-4">
+                    <h2>Images</h2>
+                </div>
+                <div class="col-mr-6">
+                    <div class="form-group sm">
+                        <label style="font-size:100%; display:flex; flex-direction: row; align-items: center">
+                            Images per row
+                            <input
+                                type="number"
+                                class="form-control form-control-sm"
+                                id="numberOfColumns"
+                                [(ngModel)]="numberOfColumns"
+                                name="numberOfColumns"
+                                style="margin-left:5px; margin-right: 5px; width: 60px;"
+                            />
+                            <button class="btn btn-info btn-sm" (click)="retrieveImages(project_id)">
+                                OK
+                            </button>
+                        </label>
+                    </div>
+                </div>
+            </div> 
+            <div class="row">
+                <ul class="list-group" *ngFor="let rowOfImages of images">
 
-                <ul class="list-group list-group-horizontal-md">
-                <li  class="list-group-item "
-                    *ngFor="let image of rowOfImages"
-                    [class.active]="image.file_name == currentImage.file_name"
-                    (click)="setActiveImage(image)"
-                    style="text-align:center"
-                    >
-                <img [src]="image.final_location" [ngStyle]="{'width.px': maxImageWidth}">
-                <br>
-                {{ image.file_name}}
-                </li>
-            </ul>
-        </ul>   
+                    <ul class="list-group list-group-horizontal-md">
+                        <li  class="list-group-item "
+                            *ngFor="let image of rowOfImages"
+                            [class.active]="image.file_name == currentImage.file_name"
+                            (click)="setActiveImage(image)"
+                            style="text-align:center"
+                            >
+                        <img [src]="image.final_location" [ngStyle]="{'width.px': maxImageWidth}">
+                        <br>
+                        {{ image.file_name}}
+                        </li>
+                    </ul>
+                </ul> 
+            </div>
+        </div>
     </div>
 </div>
