@@ -175,7 +175,7 @@ export class ImagesListComponent implements OnInit {
     for (let i = 0; i < this.imageFiltersObject.length; i++) {
       let currentFilter = this.imageFiltersObject[i]
       if (currentFilter.value) {
-        if (this.filterExpression.length >0) this.filterExpression += "&"
+        if (this.filterExpression.length >0) this.filterExpression += ";"
         // this.filterExpression += "'"
         this.filterExpression += currentFilter.variable;
         this.filterExpression += "="
@@ -186,7 +186,7 @@ export class ImagesListComponent implements OnInit {
     for (let i = 0; i < this.imageFiltersBool.length; i++) {
       let currentFilter = this.imageFiltersBool[i]
       if (currentFilter.value=="True" || currentFilter.value=="False") {
-        if (this.filterExpression.length >0) this.filterExpression += "&"
+        if (this.filterExpression.length >0) this.filterExpression += ";"
         this.filterExpression += currentFilter.variable;
         this.filterExpression += "="
         this.filterExpression += currentFilter.value;
@@ -195,7 +195,7 @@ export class ImagesListComponent implements OnInit {
     for (let i = 0; i < this.imageFiltersInt64.length; i++) {
       let currentFilter = this.imageFiltersInt64[i]
       if (currentFilter.min || currentFilter.max) {
-        if (this.filterExpression.length >0) this.filterExpression += "&"
+        if (this.filterExpression.length >0) this.filterExpression += ";"
         this.filterExpression += currentFilter.variable;
         this.filterExpression += "="
         this.filterExpression += currentFilter.min;
@@ -206,11 +206,11 @@ export class ImagesListComponent implements OnInit {
     for (let i = 0; i < this.imageFiltersFloat64.length; i++) {
       let currentFilter = this.imageFiltersFloat64[i]
       if (currentFilter.min || currentFilter.max) {
-        if (this.filterExpression.length >0) this.filterExpression += "&"
+        if (this.filterExpression.length >0) this.filterExpression += ";"
         this.filterExpression += currentFilter.variable;
         this.filterExpression += "="
         this.filterExpression += currentFilter.min;
-        this.filterExpression += "%"
+        this.filterExpression += "^"
         this.filterExpression += currentFilter.max;
       }
     }
@@ -236,6 +236,11 @@ export class ImagesListComponent implements OnInit {
 
   removeFilters(): void {
     this.filterExpression = '';
+    this.imageFilters = [];
+    this.imageFiltersObject = [];
+    this.imageFiltersBool = [];
+    this.imageFiltersInt64 = [];
+    this.imageFiltersFloat64 = [];
     this.retrieveImages(this.route.snapshot.params['projectId']);
     this.retrieveFilters(this.route.snapshot.params['projectId']);
   }
