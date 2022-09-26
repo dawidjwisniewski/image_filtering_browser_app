@@ -11,6 +11,9 @@ from rest_framework.decorators import api_view
 
 from .handle_uploaded_files import handle_uploaded_csv_file, handle_uploaded_image
 
+from django.db.models import FloatField, IntegerField
+from django.db.models.functions import Cast
+
 @api_view(['GET', 'POST'])
 def project_list(request):
     if request.method == 'GET':
@@ -146,14 +149,15 @@ def image_list(request, pk):
             # print(filter_list)
             for filter in filter_list:
                 filter_array=re.split("[=^]", filter)
-                print(filter_array)
+                # print(filter_array)
                 # images.values("file_name").distinct()
                 variable_name = filter_array[0]
                 
                 #get type of variable from db
                 data_type = list(image_datapointmetadata.filter(project_id=pk)\
                     .filter(variable=variable_name).values("variable_type"))[0].get("variable_type")
-
+                
+                #filter based on value criteria depending oon variable type
                 if data_type in ["object","bool"]:
                     filter_criteria = {
                         "variable__iexact": filter_array[0],
@@ -161,19 +165,31 @@ def image_list(request, pk):
                     }                    
                     curent_filter_image_datapoints = image_datapoints.filter(**filter_criteria)
                     list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
-                    print(list_of_files_matching_filter)
+                    # print(list_of_files_matching_filter)
                     images=images.filter(file_name__in=list_of_files_matching_filter)
-                elif data_type in ["int64", "bool64"]:
-                    pass
-                # bool int64 bool64
-
-
-
-                    #Bool - btw check type of Bool in DB
-                    #balues
-                
+                elif data_type in ["float64", "int64"]:
+                    curent_filter_image_datapoints = image_datapoints.filter(variable__iexact = filter_array[0])
                     
-            # add filtering option here?
+                    if data_type == "float64":
+                        curent_filter_image_datapoints = curent_filter_image_datapoints.annotate(
+                            value_cast=Cast('value', output_field=FloatField()))                    
+                        filter_criteria = {
+                            "value_cast__gte": float(filter_array[1]),
+                            "value_cast__lte": float(filter_array[2])
+                        }
+                    elif data_type == "int64":
+                        curent_filter_image_datapoints = curent_filter_image_datapoints.annotate(
+                            value_cast=Cast('value', output_field=IntegerField()))                    
+                        filter_criteria = {
+                            "value_cast__gte": int(filter_array[1]),
+                            "value_cast__lte": int(filter_array[2])
+                        }
+
+                    curent_filter_image_datapoints = curent_filter_image_datapoints.filter(**filter_criteria)
+                    list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
+                    images=images.filter(file_name__in=list_of_files_matching_filter)       
+
+        # add sorting option here?
 
         image_serializer = ImageSerializer(images, many=True)
         return JsonResponse(image_serializer.data, safe=False)
