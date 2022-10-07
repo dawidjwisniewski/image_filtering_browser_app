@@ -30,6 +30,11 @@ export class ImagesListComponent implements OnInit {
   currentImage: Image = {};
 
   filterExpression = '';
+  sortExpression = '';
+
+  sortVariable = 'file_name';
+  sortOrder = 'ASC'
+  imageVariables = ['file_name'];
   
   // name = '';
   // message = '';
@@ -91,6 +96,7 @@ export class ImagesListComponent implements OnInit {
         next: data => {
           this.images = createImagesArray(data, this.numberOfColumns);
           console.log(data);
+          console.log(this.imageVariables);
         },
         error: error => {
           console.log(error);
@@ -98,6 +104,7 @@ export class ImagesListComponent implements OnInit {
       }
       );
   }
+
 
   retrieveFilters(project_id: string): void {
     function splitFiltersByType(that: any, data: any): any {
@@ -112,6 +119,7 @@ export class ImagesListComponent implements OnInit {
           } else if (data[i].variable_type == "float64") {
             that.imageFiltersFloat64.push(data[i]);
           }
+          that.imageVariables.push(data[i].variable)
         }
           // Default values for filtsrs
       // for (let i = 0; i < that.imageFiltersObject.length; i++) {
@@ -172,6 +180,8 @@ export class ImagesListComponent implements OnInit {
 
   applyFilters(): void {
     this.filterExpression = '';
+    // this.filterExpression = 'sortBy='+this.sortVariable+"^"+this.sortDescending;
+    
     for (let i = 0; i < this.imageFiltersObject.length; i++) {
       let currentFilter = this.imageFiltersObject[i]
       if (currentFilter.value) {
@@ -214,24 +224,61 @@ export class ImagesListComponent implements OnInit {
         this.filterExpression += currentFilter.max;
       }
     }
-    this.filterExpression += "#"
+    // this.filterExpression += "#"
     console.log(this.filterExpression)
     
     // Querry to backed
     // this.currentProject = {};
     // this.currentIndex = -1;
-    this.ifbappService.getFilteredImages(this.project_id, this.filterExpression)
-      .subscribe({
-        next: data => {
-          this.images = createImagesArray(data, this.numberOfColumns);
-          console.log(data);
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      );
+    // this.ifbappService.getFilteredImages(this.project_id, this.filterExpression)
+    //   .subscribe({
+    //     next: data => {
+    //       this.images = createImagesArray(data, this.numberOfColumns);
+    //       console.log(data);
+    //     },
+    //     error: error => {
+    //       console.log(error);
+    //     }
+    //   }
+    //   );
+    
+    this.retrieveImagesUniversal()  
 
+  }
+
+  applySort():void{
+    this.sortExpression = this.sortVariable+";"+this.sortOrder
+    this.retrieveImagesUniversal()  
+  }
+
+  retrieveImagesUniversal():void {
+    
+    // construct sort and filter querry to pass as one string
+    let sortAndFilterExpression='';
+    if (this.sortExpression != '') {
+      sortAndFilterExpression += "sort="
+      sortAndFilterExpression += this.sortExpression
+    }
+    if (this.filterExpression != '') {
+      if (sortAndFilterExpression != '') {
+        sortAndFilterExpression += "&"
+      }
+      sortAndFilterExpression += "filter="
+      sortAndFilterExpression += this.filterExpression
+    }
+
+    // main call to backend
+    this.ifbappService.getSortedAndFilteredImages(this.project_id, sortAndFilterExpression)
+    .subscribe({
+      next: data => {
+        this.images = createImagesArray(data, this.numberOfColumns);
+        console.log(data);
+      },
+      error: error => {
+        console.log(error);
+      }
+    }
+    );
   }
 
   removeFilters(): void {
@@ -241,7 +288,7 @@ export class ImagesListComponent implements OnInit {
     this.imageFiltersBool = [];
     this.imageFiltersInt64 = [];
     this.imageFiltersFloat64 = [];
-    this.retrieveImages(this.route.snapshot.params['projectId']);
+    this.retrieveImagesUniversal()
     this.retrieveFilters(this.route.snapshot.params['projectId']);
   }
 

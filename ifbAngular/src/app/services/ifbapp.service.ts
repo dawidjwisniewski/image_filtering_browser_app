@@ -64,8 +64,8 @@ export class IfbappService {
   getFiltersOfType(project_id: any, var_type: String): Observable<ImageDatapointMetadata[]> {
     return this.http.get<ImageDatapointMetadata[]>(`${baseUrl}/imagesMetaData/${project_id}?var_type=${var_type}`);
   }
-  getFilteredImages(project_id: any, filterExpression:any): Observable<Image[]> {
-    return this.http.get<Image[]>(`${baseUrl}/images/${project_id}?filter=${filterExpression}`);
+  getSortedAndFilteredImages(project_id: any, sortAndFilterExpression:any): Observable<Image[]> {
+    return this.http.get<Image[]>(`${baseUrl}/images/${project_id}?${sortAndFilterExpression}`);
   }
 
   addProjectDataCsv(id: any, formData: any): Observable<any> {
