@@ -77,14 +77,19 @@ def upload_csv_file(request, pk):
     except Project.DoesNotExist:
         return JsonResponse({'message': "The project does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
-    imagedata = ImageDatapoint.objects.filter(project_id=pk)
+    imagedata = ImageDatapoint.objects.filter(image__project__id=pk)
     imagedatametadata = ImageDatapointMetadata.objects.filter(project_id=pk)
-
+    
     project_id = pk
     if request.method == 'POST':
         imagedata.delete()
         imagedatametadata.delete()
-        handle_uploaded_csv_file(project_id,request.FILES['file'])
+
+        # first get the list of files in the project that should appear in CSV
+        list_of_images = Image.objects.filter(project__id=pk).values("file_name","id")
+        print(list_of_images)
+
+        handle_uploaded_csv_file(project_id,request.FILES['file'], list_of_images)
         return JsonResponse({'message': 'File upload successfull!'})
         # try:
         #     handle_uploaded_csv_file(project_id,request.FILES['file'])

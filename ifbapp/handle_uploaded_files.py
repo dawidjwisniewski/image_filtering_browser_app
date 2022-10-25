@@ -17,7 +17,7 @@ def make_sure_folder_exists(path):
     if not os.path.exists(path): 
         os.makedirs(path)
   
-def handle_uploaded_csv_file(project_id, file):
+def handle_uploaded_csv_file(project_id, file, images_list):
     
     # save original csv to temp location
     make_sure_folder_exists(temp_file_location)
@@ -40,7 +40,7 @@ def handle_uploaded_csv_file(project_id, file):
     now = pd.Timestamp.now()
     final_data = data.melt(id_vars=['file_name'], var_name='variable', value_name='value')
     final_data['value'] = final_data['value'].astype(str)
-    final_data['project_id'] = project_id
+    # final_data['project_id'] = project_id
     final_data['created_at'] = now
     final_data['updated_at'] = now
 
@@ -66,8 +66,20 @@ def handle_uploaded_csv_file(project_id, file):
     database_url = f'postgresql://{user}:{password}@{host}:{port}/{database_name}'
     engine = create_engine(database_url, echo=False)
 
-    final_data.to_sql('ifbapp_imagedatapoint', con=engine, if_exists = 'append', index=False)
+    # save metadata
     data_metadata.to_sql('ifbapp_imagedatapointmetadata', con=engine, if_exists = 'append', index=False)
+
+    # save image data per image (since image is a foreign key)
+    for image in images_list:
+        data_for_one_image = final_data[final_data.file_name == image["file_name"]].drop('file_name', axis=1)
+        if data_for_one_image.shape[0]==0:
+            print(f"No data for file {image['file_name']}")
+        else:
+            data_for_one_image["image_id"]=image["id"]
+            data_for_one_image.to_sql('ifbapp_imagedatapoint', con=engine, if_exists = 'append', index=False)
+
+        # at this point it would be worth to create list images in the original CSV, remove from it the files that actually appear in the data
+        # and at the end list files without data
 
     # move csv file to project location
     final_csv_location = f'{file_location}{project_id}'
