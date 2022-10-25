@@ -4,39 +4,7 @@
         <label><strong>Project: </strong></label> {{ currentProject.name }}
     </div>
     <br>
-    <div>
-        <form  >
-            <div class="form-group">
-                <label for="file">Add CSV Data File</label>
-                <input 
-                    id="file" 
-                    type="file" 
-                    (change)="onCsvFileChange($event)">
-                <!-- <div *ngIf="f['file'].touched && f['file'].invalid" class="alert alert-danger">
-                    <div *ngIf="f['file'].errors['required']">File is required.</div>
-                </div> -->
-            </div>
-            <div *ngIf="csvFile" class="progress my-3">
-                <div
-                    class="progress-bar progress-bar-info progress-bar-striped"
-                    role="progressbar"
-                    attr.aria-valuenow="{{ csvProgress }}"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    [ngStyle]="{ width: csvProgress + '%' }"
-                >
-                    {{ csvProgress }}%
-                </div>
-            </div>
-            <button 
-                class="btn btn-success" 
-                type="submit"
-                [disabled]="!csvFile"
-                (click)="submitCsv()"
-                >Submit</button>
-        </form>
-    </div>
-    <br><br>
+
     <div>
         <form  >
             <div class="form-group">
@@ -68,6 +36,41 @@
                 type="submit"
                 [disabled]="!imageFiles"
                 (click)="submitImage()"
+                >Submit</button>
+        </form>
+    </div>
+
+    <br><br>
+ 
+    <div>
+        <form  >
+            <div class="form-group">
+                <label for="file">Add CSV Data File</label>
+                <input 
+                    id="file" 
+                    type="file" 
+                    (change)="onCsvFileChange($event)">
+                <!-- <div *ngIf="f['file'].touched && f['file'].invalid" class="alert alert-danger">
+                    <div *ngIf="f['file'].errors['required']">File is required.</div>
+                </div> -->
+            </div>
+            <div *ngIf="csvFile" class="progress my-3">
+                <div
+                    class="progress-bar progress-bar-info progress-bar-striped"
+                    role="progressbar"
+                    attr.aria-valuenow="{{ csvProgress }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    [ngStyle]="{ width: csvProgress + '%' }"
+                >
+                    {{ csvProgress }}%
+                </div>
+            </div>
+            <button 
+                class="btn btn-success" 
+                type="submit"
+                [disabled]="!csvFile"
+                (click)="submitCsv()"
                 >Submit</button>
         </form>
     </div>
