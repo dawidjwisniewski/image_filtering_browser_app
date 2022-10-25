@@ -1,4 +1,5 @@
 #from tkinter import Image
+from tkinter import N
 from django.shortcuts import render
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
@@ -11,8 +12,9 @@ from rest_framework.decorators import api_view
 
 from .handle_uploaded_files import handle_uploaded_csv_file, handle_uploaded_image
 
-from django.db.models import FloatField, IntegerField
-from django.db.models.functions import Cast
+from django.db.models import FloatField, IntegerField, F, Value, Prefetch
+from django.db.models.functions import Cast, RowNumber, Rank
+from django.db.models.expressions import Window, RawSQL
 
 @api_view(['GET', 'POST'])
 def project_list(request):
@@ -137,7 +139,97 @@ def image_list(request, pk):
 
     if request.method == 'GET':
         
-#fix this - only first filter gets through
+        sort_string = request.GET.get('sort', None) 
+        if sort_string is not None:
+            variable_name, sort_order = sort_string.split(";")            
+            
+            if sort_order == "DESC":
+                sort_order_prefix = "-";
+            else:
+                sort_order_prefix = "";
+            ###### start paste here ######         
+            image_datapoints = ImageDatapoint.objects.filter(project_id=pk)
+            image_datapointmetadata = ImageDatapointMetadata.objects.filter(project_id=pk)
+            print(f"{variable_name=}")
+                
+            #filter based on value criteria depending oon variable type
+            if variable_name == "file_name":
+                images=images.order_by(sort_order_prefix+variable_name)
+            else:
+                curent_filter_image_datapoints = image_datapoints.filter(variable=variable_name)
+                # print("Pre-filter:")
+                # print(curent_filter_image_datapoints.values("file_name"))
+                data_type = list(image_datapointmetadata.filter(project_id=pk)\
+                    .filter(variable=variable_name).values("variable_type"))[0].get("variable_type")
+                if data_type in ["object","bool"]:              
+                    # curent_filter_image_datapoints = curent_filter_image_datapoints.order_by("value")
+                    curent_filter_image_datapoints = curent_filter_image_datapoints.annotate(
+                            sort_position=Window(Rank(), order_by=[F("value")] ))  
+                    print(curent_filter_image_datapoints.values("file_name", "sort_position"))
+                    print(curent_filter_image_datapoints.filter(file_name__gt="b").values("file_name", "sort_position"))
+                    # list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
+                    # print("Post-filter:")
+                    # print(curent_filter_image_datapoints.order_by("value").values("sort_position"))
+                    # print(curent_filter_image_datapoints.order_by("value").values("file_name"))
+                    # print(curent_filter_image_datapoints.raw("select file_name fromm ifb_app__image").values())
+
+
+                    # print(list_of_files_matching_filter)
+                    # images=images.order_by("list_of_files_matching_filter__file_name")
+                    # images=images.order_by("curent_filter_image_datapoints__sort_position")
+                    # images=images.order_by("file_name__curent_filter_image_datapoints")
+                    # images=images.filter("images__file_name"=="curent_filter_image_datapoints__file_name")
+                    # test= images.select_related("image_datapoints__value").order_by("value")
+                    # test= images.prefetch_related(Prefetch("sort_position", queryset=curent_filter_image_datapoints))
+                    # test= images.prefetch_related(Prefetch("sort_position", queryset=curent_filter_image_datapoints))
+                    # test = images
+                    # test= test.annotate(val=RawSQL("""
+                    #     SELECT value from ifbapp_imagedatapoints where file_name=%s
+                    #     """, ("a.jpg",)))
+                    print("Pre-filter:")
+                    print(images.values("file_name","sort_order"))
+                    for image in images:
+                        print(image.file_name)                                
+                        print(curent_filter_image_datapoints.filter(file_name=image.file_name).values("sort_position")[0].get("sort_position"))
+                        # image.sort_order = curent_filter_image_datapoints.filter(file_name=image.file_name).values("sort_position")
+                        # print(image.sort_order)
+                        image.save()
+                    
+                    # images= images.annotate(val=RawSQL("""
+                    #     SELECT value 
+                    #         FROM ifbapp_imagedatapoint 
+                    #         WHERE ifbapp_imagedatapoint.file_name=%s
+                    #     """, (F("file_name"),)))
+                    # images = images.annotate(
+                    #         sort_position=Window(RowNumber(), order_by=[F("value")] ))
+                    print("Post-filter:")
+                    print(images.values("file_name","sort_order"))
+                elif data_type in ["float64", "int64"]:
+                    curent_filter_image_datapoints = image_datapoints.filter(variable__iexact = filter_array[0])
+                    
+                    if data_type == "float64":
+                        curent_filter_image_datapoints = curent_filter_image_datapoints.annotate(
+                            value_cast=Cast('value', output_field=FloatField()))                    
+                        filter_criteria = {
+                            "value_cast__gte": float(filter_array[1]),
+                            "value_cast__lte": float(filter_array[2])
+                        }
+                    elif data_type == "int64":
+                        curent_filter_image_datapoints = curent_filter_image_datapoints.annotate(
+                            value_cast=Cast('value', output_field=IntegerField()))                    
+                        filter_criteria = {
+                            "value_cast__gte": int(filter_array[1]),
+                            "value_cast__lte": int(filter_array[2])
+                        }
+
+                    curent_filter_image_datapoints = curent_filter_image_datapoints.filter(**filter_criteria)
+                    list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
+                    images=images.filter(file_name__in=list_of_files_matching_filter)       
+
+            ###### end paste here ########
+
+
+            
 
         filter_string = request.GET.get('filter', None) 
         # print(filter_string)
