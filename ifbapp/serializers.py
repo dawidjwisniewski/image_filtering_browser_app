@@ -27,8 +27,9 @@ class ImageDatapointSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageDatapoint
         fields = (
-            'project', 
-            'file_name', 
+            # 'project', 
+            'image',
+            # 'file_name', 
             'variable', 
             'value', 
             'created_at', 
