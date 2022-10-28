@@ -44,7 +44,7 @@ class ImageDatapoint(models.Model):
     # file_name = models.ForeignKey(Image, to_field='file_name', on_delete=models.CASCADE) #try1 - did not work as expected
     variable = models.CharField(max_length=30, blank=False, default="")
     # variable = models.ForeignKey(ImageDatapointMetadata, on_delete=models.CASCADE) #try1 - did not work as expected
-    value = models.CharField(max_length=1000, blank=False, default="")
+    value = models.CharField(max_length=10000, blank=False, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
