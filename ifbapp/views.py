@@ -109,7 +109,7 @@ def image_datapoint(request, pk):
 
     if request.method == 'GET':
         
-        image_datapoints = ImageDatapoint.objects.filter(project_id=pk)
+        image_datapoints = ImageDatapoint.objects.filter(image__project_id=pk)
 
         image_datapoints_serializer = ImageDatapointSerializer(image_datapoints, many=True)
         return JsonResponse(image_datapoints_serializer.data, safe=False)
@@ -153,7 +153,7 @@ def image_list(request, pk):
             else:
                 sort_order_prefix = "";
             ###### start paste here ######         
-            image_datapoints = ImageDatapoint.objects.filter(project_id=pk)
+            image_datapoints = ImageDatapoint.objects.filter(image__project_id=pk)
             image_datapointmetadata = ImageDatapointMetadata.objects.filter(project_id=pk)
             print(f"{variable_name=}")
                 
@@ -239,7 +239,7 @@ def image_list(request, pk):
         filter_string = request.GET.get('filter', None) 
         # print(filter_string)
         if filter_string is not None:
-            image_datapoints = ImageDatapoint.objects.filter(project_id=pk)
+            image_datapoints = ImageDatapoint.objects.filter(image__project_id=pk)
             image_datapointmetadata = ImageDatapointMetadata.objects.filter(project_id=pk)
 
             filter_list = filter_string.split(";")
@@ -256,14 +256,48 @@ def image_list(request, pk):
                 
                 #filter based on value criteria depending oon variable type
                 if data_type in ["object","bool"]:
+                    # filter_criteria = {
+                    #     "variable__iexact": filter_array[0],
+                    #     "value__icontains": filter_array[1]
+                    # }                    
+                    # curent_filter_image_datapoints = image_datapoints.filter(**filter_criteria)
+                    # list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
+                    # # print(list_of_files_matching_filter)
+                    # images=images.filter(file_name__in=list_of_files_matching_filter)
+
+
                     filter_criteria = {
-                        "variable__iexact": filter_array[0],
-                        "value__icontains": filter_array[1]
+                        "imagedatapoint__variable__iexact": filter_array[0],
+                        "imagedatapoint__value__icontains": filter_array[1]
                     }                    
-                    curent_filter_image_datapoints = image_datapoints.filter(**filter_criteria)
-                    list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
+                    # curent_filter_image_datapoints = image_datapoints.filter(**filter_criteria)
+                    # list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
                     # print(list_of_files_matching_filter)
-                    images=images.filter(file_name__in=list_of_files_matching_filter)
+                    images=images.filter(**filter_criteria)
+                    # images=Image.objects.filter(**filter_criteria)
+
+                # elif data_type in ["float64", "int64"]:
+                #     curent_filter_image_datapoints = image_datapoints.filter(variable__iexact = filter_array[0])
+                    
+                #     if data_type == "float64":
+                #         curent_filter_image_datapoints = curent_filter_image_datapoints.annotate(
+                #             value_cast=Cast('value', output_field=FloatField()))                    
+                #         filter_criteria = {
+                #             "value_cast__gte": float(filter_array[1]),
+                #             "value_cast__lte": float(filter_array[2])
+                #         }
+                #     elif data_type == "int64":
+                #         curent_filter_image_datapoints = curent_filter_image_datapoints.annotate(
+                #             value_cast=Cast('value', output_field=IntegerField()))                    
+                #         filter_criteria = {
+                #             "value_cast__gte": int(filter_array[1]),
+                #             "value_cast__lte": int(filter_array[2])
+                #         }
+
+                #     curent_filter_image_datapoints = curent_filter_image_datapoints.filter(**filter_criteria)
+                #     list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
+                #     images=images.filter(file_name__in=list_of_files_matching_filter)    
+
                 elif data_type in ["float64", "int64"]:
                     curent_filter_image_datapoints = image_datapoints.filter(variable__iexact = filter_array[0])
                     
@@ -282,9 +316,8 @@ def image_list(request, pk):
                             "value_cast__lte": int(filter_array[2])
                         }
 
-                    curent_filter_image_datapoints = curent_filter_image_datapoints.filter(**filter_criteria)
-                    list_of_files_matching_filter = curent_filter_image_datapoints.values("file_name")
-                    images=images.filter(file_name__in=list_of_files_matching_filter)       
+                    list_of_files_matching_filter = curent_filter_image_datapoints.filter(**filter_criteria).select_related("image").values("image_id")
+                    images=images.filter(id__in=list_of_files_matching_filter)       
 
         # add sorting option here?
 
