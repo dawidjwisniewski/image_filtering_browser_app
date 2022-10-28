@@ -108,6 +108,7 @@ export class ImagesListComponent implements OnInit {
 
   retrieveFilters(project_id: string): void {
     function splitFiltersByType(that: any, data: any): any {
+      that.imageVariables = ['file_name'];
       for (let i = 0; i < data.length; i++) {
           console.log(data[i]);
           if (data[i].variable_type == "object") {
