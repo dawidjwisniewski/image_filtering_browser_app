@@ -181,13 +181,21 @@
                     <ul class="list-group list-group-horizontal-md">
                         <li  class="list-group-item "
                             *ngFor="let image of rowOfImages"
-                            [class.active]="image.file_name == currentImage.file_name"
+                            [class.active]="image.id == currentImage.id"
                             (click)="setActiveImage(image)"
                             style="text-align:center"
                             >
                         <img [src]="image.final_location" [ngStyle]="{'width.px': maxImageWidth}">
                         <br>
                         {{ image.file_name}}
+                        <div *ngIf="image.id == currentImage.id">
+                            <button 
+                                class="btn btn-warning"
+                                type="button"
+                                routerLink="/ifbapp/image/{{ currentImage.id}}">
+                                Show details
+                            </button>
+                        </div>
                         </li>
                     </ul>
                 </ul> 

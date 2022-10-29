@@ -59,6 +59,9 @@ export class IfbappService {
   getAllImages(project_id: any): Observable<Image[]> {
     return this.http.get<Image[]>(`${baseUrl}/images/${project_id}`);
   }
+  getOneImages(image_id: any): Observable<Image> {
+    return this.http.get<Image>(`${baseUrl}/image/${image_id}`);
+  }
   getFilters(project_id: any): Observable<ImageDatapointMetadata[]> {
     return this.http.get<ImageDatapointMetadata[]>(`${baseUrl}/imagesMetaData/${project_id}`);
   }
