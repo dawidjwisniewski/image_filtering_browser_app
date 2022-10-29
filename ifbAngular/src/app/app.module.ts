@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { NavbarModule, WavesModule } from 'angular-bootstrap-md';
 import { ImagesListComponent } from './components/images-list/images-list.component';
+import { ImageDetailsComponent } from './components/image-details/image-details.component';
 
 
 
@@ -26,7 +27,8 @@ import { ImagesListComponent } from './components/images-list/images-list.compon
     ProjectsListComponent,
     ProjectDetailsComponent,
     AddProjectDataComponent,
-    ImagesListComponent
+    ImagesListComponent,
+    ImageDetailsComponent
   ],
   imports: [
     BrowserModule,

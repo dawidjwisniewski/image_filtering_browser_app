@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 // import { UserService } from './user.service';
-import { Image, ImageDatapointMetadata, Project } from '../models/project.model';
+import { Image, ImageDatapoint, ImageDatapointMetadata, Project } from '../models/project.model';
+import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 const baseUrl = 'http://localhost:8080/api/ifbapp';
 const loginUrl = 'http://localhost:8080/api/token';
 
@@ -66,6 +67,10 @@ export class IfbappService {
   }
   getSortedAndFilteredImages(project_id: any, sortAndFilterExpression:any): Observable<Image[]> {
     return this.http.get<Image[]>(`${baseUrl}/images/${project_id}?${sortAndFilterExpression}`);
+  }
+
+  getImageData(image_id: any): Observable<ImageDatapoint[]> {
+    return this.http.get<ImageDatapoint[]>(`${baseUrl}/imagesData/${image_id}`);
   }
 
   addProjectDataCsv(id: any, formData: any): Observable<any> {
