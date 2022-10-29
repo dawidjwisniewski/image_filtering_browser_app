@@ -133,6 +133,16 @@ def image_datapointmetadata(request, pk):
         return JsonResponse(image_datapointsmetadata_serializer.data, safe=False)
 
 @api_view(['GET', 'POST'])
+def image_details(request, pk):
+    try:
+        image = Image.objects.get(pk=pk)
+    except Image.DoesNotExist:
+        return JsonResponse({'message': "The image does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        return JsonResponse(ImageSerializer(image).data)
+
+@api_view(['GET', 'POST'])
 def image_list(request, pk):
     try:
         project = Project.objects.get(pk=pk)
