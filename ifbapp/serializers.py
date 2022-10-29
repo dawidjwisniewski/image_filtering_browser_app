@@ -28,6 +28,7 @@ class ImageDatapointSerializer(serializers.ModelSerializer):
         model = ImageDatapoint
         fields = (
             # 'project', 
+            'id',
             'image',
             # 'file_name', 
             'variable', 
