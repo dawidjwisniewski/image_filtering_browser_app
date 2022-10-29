@@ -16,8 +16,8 @@ export class Image {
 
 export class ImageDatapoint {
     id?: any;
-    project_id?: any;
-    file_name?: string;
+    image_id?: any;
+    // file_name?: string;
     variable?: string;
     value?: string;
     created_at?: string;
