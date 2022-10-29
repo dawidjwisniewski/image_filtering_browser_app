@@ -4,24 +4,6 @@
             <h1>Filters</h1>
 
             <form>
-                <div *ngIf="imageFiltersObject.length>0">
-                    <h2> Text Variables </h2>
-                    <div class="form-group" *ngFor="let filter of imageFiltersObject">
-                        
-                        <label for="filter.variable" style="font-size:120%; display:flex; flex-direction: row; align-items: center">
-                            {{filter.variable}}
-                            <input
-                                type="text"
-                                class="form-control form-control-sm"
-                                id="{{filter.variable}}"
-                                [(ngModel)]="filter.value"
-                                name="{{filter.variable}}"
-                                style="margin-left:20px;"
-                            />
-                        </label>
-                    </div>
-                </div>
-
                 <div *ngIf="imageFiltersBool.length>0">
                     <h2> Binnary Variables  </h2>
                     <div class="form-group" *ngFor="let filter of imageFiltersBool">
@@ -101,6 +83,24 @@
                         />
                     </label>
 
+                </div>
+
+                <div *ngIf="imageFiltersObject.length>0">
+                    <h2> Text Variables </h2>
+                    <div class="form-group" *ngFor="let filter of imageFiltersObject">
+                        
+                        <label for="filter.variable" style="font-size:120%; display:flex; flex-direction: row; align-items: center">
+                            {{filter.variable}}
+                            <input
+                                type="text"
+                                class="form-control form-control-sm"
+                                id="{{filter.variable}}"
+                                [(ngModel)]="filter.value"
+                                name="{{filter.variable}}"
+                                style="margin-left:20px;"
+                            />
+                        </label>
+                    </div>
                 </div>
             </form>
 
