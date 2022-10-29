@@ -1,1 +1,45 @@
-<p>image-details works!</p>
+<div class="container-fluid">    
+    <div class="row" >
+        <div class="col-4" style="align-items:center;">
+            <div class="row center">
+                <img [src]="image.final_location" class="center">    
+            </div>
+            <br>
+            <div class="row text-align-center">
+                {{ image.file_name}}
+            </div>
+            <br>
+            <br>
+            <button 
+                class="btn btn-warning align-center"
+                type="button"
+                (click)="goBack()">
+                Go back to images list
+            </button>
+
+        </div>
+
+        <div class="col-8">
+            <div class="form-group" *ngFor="let dataPoint of imageData">                        
+                <label for="dataPoint.variable" style="font-size:120%; display:flex; ">
+                    {{dataPoint.variable}}
+                    <input                    
+                        class="form-control form-control-sm"
+                        id="{{dataPoint.value}}"
+                        [(ngModel)]="dataPoint.value"
+                        name={{dataPoint.value}}
+                        style="margin-left:20px; margin-right: 5px;"
+                    />
+                </label>
+            </div>
+            <br>
+            <br>
+            <button 
+                class="btn btn-warning align-center"
+                type="button"
+                (click)="goBack()">
+                Go back to images list
+            </button>
+        </div>
+    </div>
+</div>

@@ -6,6 +6,7 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { ProjectsListComponent } from './components/projects-list/projects-list.component';
 import { AddProjectDataComponent } from './components/add-project-data/add-project-data.component';
 import { ImagesListComponent } from './components/images-list/images-list.component';
+import { ImageDetailsComponent } from './components/image-details/image-details.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'ifbapp', pathMatch: 'full'},
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path: 'ifbapp/editProject/:projectId', component: ProjectDetailsComponent},
   {path: 'ifbapp/addProjectData/:projectId', component: AddProjectDataComponent},
   {path: 'ifbapp/images/:projectId', component: ImagesListComponent},
+  {path: 'ifbapp/image/:imageId', component: ImageDetailsComponent},
 ];
 
 @NgModule({
