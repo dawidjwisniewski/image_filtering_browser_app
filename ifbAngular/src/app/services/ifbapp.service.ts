@@ -71,12 +71,16 @@ export class IfbappService {
   getSortedAndFilteredImages(project_id: any, sortAndFilterExpression:any): Observable<Image[]> {
     return this.http.get<Image[]>(`${baseUrl}/images/${project_id}?${sortAndFilterExpression}`);
   }
-
   getImageData(image_id: any): Observable<ImageDatapoint[]> {
     return this.http.get<ImageDatapoint[]>(`${baseUrl}/singleImageData/${image_id}`);
   }
-  getProjectImagesData(project_id: any): Observable<ImageDatapoint[]> {
-    return this.http.get<ImageDatapoint[]>(`${baseUrl}/imagesData/${project_id}`);
+  getProjectImagesData(project_id: any, additionalVariablesExpression: any): Observable<ImageDatapoint[]> {
+    if (additionalVariablesExpression != ''){
+      return this.http.get<ImageDatapoint[]>(`${baseUrl}/imagesData/${project_id}?additional_variables=${additionalVariablesExpression}`);
+    }
+    else {
+      return this.http.get<ImageDatapoint[]>(`${baseUrl}/imagesData/${project_id}`);
+    }
   }
 
   addProjectDataCsv(id: any, formData: any): Observable<any> {
