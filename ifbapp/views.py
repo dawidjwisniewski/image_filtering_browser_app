@@ -125,11 +125,13 @@ def project_images_datapoints(request, pk):
         
         image_datapoints = ImageDatapoint.objects.filter(image__project_id=pk)
 
-        addotonal_valiables = request.GET.get('additionalVariables', None) 
-        addotonal_valiables_list = addotonal_valiables.split(";")
+        additonal_valiables = request.GET.get('additional_variables', None) 
+        
+        if additonal_valiables:
+            additonal_valiables_list = additonal_valiables.split(";")
 
-        for additional_variable in addotonal_valiables_list:
-            image_datapoints.filter(variable=additional_variable)
+            for additional_variable in additonal_valiables_list:
+                image_datapoints.filter(variable=additional_variable)
 
         image_datapoints_serializer = ImageDatapointSerializer(image_datapoints, many=True)
         return JsonResponse(image_datapoints_serializer.data, safe=False)
