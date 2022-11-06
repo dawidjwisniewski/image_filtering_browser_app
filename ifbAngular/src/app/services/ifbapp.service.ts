@@ -73,7 +73,10 @@ export class IfbappService {
   }
 
   getImageData(image_id: any): Observable<ImageDatapoint[]> {
-    return this.http.get<ImageDatapoint[]>(`${baseUrl}/imagesData/${image_id}`);
+    return this.http.get<ImageDatapoint[]>(`${baseUrl}/singleImageData/${image_id}`);
+  }
+  getProjectImagesData(project_id: any): Observable<ImageDatapoint[]> {
+    return this.http.get<ImageDatapoint[]>(`${baseUrl}/imagesData/${project_id}`);
   }
 
   addProjectDataCsv(id: any, formData: any): Observable<any> {
