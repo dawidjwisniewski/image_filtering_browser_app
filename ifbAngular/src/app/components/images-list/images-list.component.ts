@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Image, Project, ImageDatapointMetadata, } from 'src/app/models/project.model';
+import { Image, Project, ImageDatapointMetadata, ImageDatapoint} from 'src/app/models/project.model';
 import { IfbappService } from 'src/app/services/ifbapp.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
@@ -48,7 +48,9 @@ export class ImagesListComponent implements OnInit {
   imageFiltersInt64: Array<ImageDatapointMetadata> = [];
   imageFiltersFloat64: Array<ImageDatapointMetadata> = [];
 
-
+  imageData?: Array<ImageDatapoint>; 
+  additionalVariables? = ['Type', "Age"];
+  additionalVariablesExpression = "";
   // filtersToApply: { [variable: string] : filterCriteria; } = {};
 
   numberOfColumns =5;
@@ -69,6 +71,8 @@ export class ImagesListComponent implements OnInit {
     this.retrieveImages(this.route.snapshot.params['projectId']);
 
     this.retrieveFilters(this.route.snapshot.params['projectId']);
+
+    this.getProjectImagesData(this.route.snapshot.params['projectId']);
   }
 
   getProject(project_id: string): void {
@@ -95,8 +99,7 @@ export class ImagesListComponent implements OnInit {
       .subscribe({
         next: data => {
           this.images = createImagesArray(data, this.numberOfColumns);
-          console.log(data);
-          console.log(this.imageVariables);
+          console.log(data);          
         },
         error: error => {
           console.log(error);
@@ -291,6 +294,27 @@ export class ImagesListComponent implements OnInit {
     this.imageFiltersFloat64 = [];
     this.retrieveImagesUniversal()
     this.retrieveFilters(this.route.snapshot.params['projectId']);
+  }
+
+  getProjectImagesData(project_id: string): void {
+    this.ifbappService.getProjectImagesData(project_id, this.additionalVariablesExpression)
+    .subscribe({
+      next: data => {
+        this.imageData = data;
+        console.log(data);
+        // console.log("here goes the filtered image:")
+        // console.log(this.imageData.filter(s => s.variable == "Type"))
+        // console.log(this.imageData.filter(s => s.image == 158).filter(s => s.variable == "Type"))
+      },
+      error:error => {
+        console.log(error);
+      }}
+    );
+    
+  }
+
+  getValue(imageId : any, addVar: string): any{    
+    return this.imageData?.filter(s => s.image == imageId).filter(s => s.variable == addVar)[0].value
   }
 
 }

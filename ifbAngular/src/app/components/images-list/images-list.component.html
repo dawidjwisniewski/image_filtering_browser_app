@@ -185,17 +185,22 @@
                             (click)="setActiveImage(image)"
                             style="text-align:center"
                             >
-                        <img [src]="image.final_location" [ngStyle]="{'width.px': maxImageWidth}">
-                        <br>
-                        {{ image.file_name}}
-                        <div *ngIf="image.id == currentImage.id">
-                            <button 
-                                class="btn btn-warning"
-                                type="button"
-                                routerLink="/ifbapp/image/{{ currentImage.id}}">
-                                Show details
-                            </button>
-                        </div>
+                            <img [src]="image.final_location" [ngStyle]="{'width.px': maxImageWidth}">
+                            <br>
+                            {{ image.file_name}}
+                            
+                            <div class="form-group" *ngFor="let variable of additionalVariables">
+                                
+                                {{ variable }} = {{ getValue(image.id, variable) }}
+                            </div>                            
+                            <div *ngIf="image.id == currentImage.id">
+                                <button 
+                                    class="btn btn-warning"
+                                    type="button"
+                                    routerLink="/ifbapp/image/{{ currentImage.id}}">
+                                    Show details
+                                </button>
+                            </div>                            
                         </li>
                     </ul>
                 </ul> 
