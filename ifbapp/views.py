@@ -115,6 +115,27 @@ def image_datapoints(request, pk):
         return JsonResponse(image_datapoints_serializer.data, safe=False)
 
 @api_view(['GET'])
+def project_images_datapoints(request, pk):
+    # try:
+    #     project = Project.objects.get(pk=pk)
+    # except Project.DoesNotExist:
+    #     return JsonResponse({'message': "The project does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        
+        image_datapoints = ImageDatapoint.objects.filter(image__project_id=pk)
+
+        addotonal_valiables = request.GET.get('additionalVariables', None) 
+        addotonal_valiables_list = addotonal_valiables.split(";")
+
+        for additional_variable in addotonal_valiables_list:
+            image_datapoints.filter(variable=additional_variable)
+
+        image_datapoints_serializer = ImageDatapointSerializer(image_datapoints, many=True)
+        return JsonResponse(image_datapoints_serializer.data, safe=False)
+
+
+@api_view(['GET'])
 def image_datapointmetadata(request, pk):
     # try:
     #     project = Project.objects.get(pk=pk)
