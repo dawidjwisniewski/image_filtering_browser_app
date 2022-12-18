@@ -187,13 +187,12 @@
                             >
                             <img [src]="image.final_location" [ngStyle]="{'width.px': maxImageWidth}">
                             <br>
-                            {{ image.file_name}}
-                            
-                            <div class="form-group" *ngFor="let variable of additionalVariables">
-                                
+                            {{ image.file_name}}                           
+                            <!-- <div class="form-group" *ngFor="let variable of additionalVariables">                                 -->
+                            <div *ngFor="let variable of additionalVariables">                                
                                 {{ variable }} = {{ getValue(image.id, variable) }}
                             </div>                            
-                            <div *ngIf="image.id == currentImage.id">
+                            <div class="buttonBottom" *ngIf="image.id == currentImage.id">
                                 <button 
                                     class="btn btn-warning"
                                     type="button"
