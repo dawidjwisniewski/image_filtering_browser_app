@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Image, Project, ImageDatapointMetadata, ImageDatapoint} from 'src/app/models/project.model';
 import { IfbappService } from 'src/app/services/ifbapp.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
+import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';;
 
 function createImagesArray(originalArray: Array<any>, numberOfColumns : number): any {
   var arrayOfArrays: Array<Array<any>> = [];
@@ -25,6 +25,7 @@ export class ImagesListComponent implements OnInit {
     name: '',
     description: ''
   };
+  
   images?: Array<Array<Image>>;
   imagesArray?: [];
   currentImage: Image = {};
@@ -35,6 +36,7 @@ export class ImagesListComponent implements OnInit {
   sortVariable = 'file_name';
   sortOrder = 'ASC'
   imageVariables = ['file_name'];
+  
   
   // name = '';
   // message = '';
@@ -49,7 +51,8 @@ export class ImagesListComponent implements OnInit {
   imageFiltersFloat64: Array<ImageDatapointMetadata> = [];
 
   imageData?: Array<ImageDatapoint>; 
-  additionalVariables? = ['Type', "Age"];
+  // additionalVariables? = ['Type', "Age"];
+  variableValuesVisibility = new Map<any, boolean>();
   additionalVariablesExpression = "";
   // filtersToApply: { [variable: string] : filterCriteria; } = {};
 
@@ -112,6 +115,7 @@ export class ImagesListComponent implements OnInit {
   retrieveFilters(project_id: string): void {
     function splitFiltersByType(that: any, data: any): any {
       that.imageVariables = ['file_name'];
+      that.variableValuesVisibility.set('file_name', false)
       for (let i = 0; i < data.length; i++) {
           console.log(data[i]);
           if (data[i].variable_type == "object") {
@@ -124,6 +128,7 @@ export class ImagesListComponent implements OnInit {
             that.imageFiltersFloat64.push(data[i]);
           }
           that.imageVariables.push(data[i].variable)
+          that.variableValuesVisibility.set(data[i].variable, false)
         }
           // Default values for filtsrs
       // for (let i = 0; i < that.imageFiltersObject.length; i++) {
@@ -180,7 +185,6 @@ export class ImagesListComponent implements OnInit {
   setActiveImage(image: Image): void {
     this.currentImage = image;
   }
-
 
   applyFilters(): void {
     this.filterExpression = '';
@@ -315,6 +319,15 @@ export class ImagesListComponent implements OnInit {
 
   getValue(imageId : any, addVar: string): any{    
     return this.imageData?.filter(s => s.image == imageId).filter(s => s.variable == addVar)[0].value
+  }
+
+
+  changeVariableValueVisibility(variable: any): void {
+    if (this.variableValuesVisibility.get(variable) == false) {
+      this.variableValuesVisibility.set(variable, true)
+    } else {
+      this.variableValuesVisibility.set(variable, false)      
+    }
   }
 
 }
