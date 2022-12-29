@@ -318,9 +318,14 @@ export class ImagesListComponent implements OnInit {
   }
 
   getValue(imageId : any, addVar: string): any{    
-    return this.imageData?.filter(s => s.image == imageId).filter(s => s.variable == addVar)[0].value
+    let result: any = this.imageData?.filter(s => s.image == imageId).filter(s => s.variable == addVar)
+    if (result.length>0){
+      return result[0].value
+    }
+    else {
+      return "NA"
+    }
   }
-
 
   changeVariableValueVisibility(variable: any): void {
     if (this.variableValuesVisibility.get(variable) == false) {
