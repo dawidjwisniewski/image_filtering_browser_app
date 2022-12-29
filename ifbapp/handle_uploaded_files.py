@@ -29,7 +29,13 @@ def handle_uploaded_csv_file(project_id, file, images_list):
     temp_location = f'{temp_file_location}/{project_id}.csv'
     
     # import csv
-    data = pd.read_csv(temp_location)
+    potential_codings=[None,"utf_8", "cp1250"]
+    for coding in potential_codings:
+        try:
+            data = pd.read_csv(temp_location, encoding=coding)
+            break
+        except UnicodeDecodeError:
+            print(f"CSV has unknown coding, {coding} did not work, need to check coding of the file and fix bug") 
 
     # since all numbers are treated as int, let's convert binnnary variables into bool
     for column in data:
