@@ -50,6 +50,9 @@ export class ImagesListComponent implements OnInit {
   imageFiltersInt64: Array<ImageDatapointMetadata> = [];
   imageFiltersFloat64: Array<ImageDatapointMetadata> = [];
 
+  imageFiltersInt64Original: Array<ImageDatapointMetadata> = [];
+  imageFiltersFloat64Original: Array<ImageDatapointMetadata> = [];
+
   imageData?: Array<ImageDatapoint>; 
   // additionalVariables? = ['Type', "Age"];
   variableValuesVisibility = new Map<any, boolean>();
@@ -123,9 +126,11 @@ export class ImagesListComponent implements OnInit {
           } else if (data[i].variable_type == "bool") {
             that.imageFiltersBool.push(data[i]);          
           } else if (data[i].variable_type == "int64") {
-            that.imageFiltersInt64.push(data[i]);          
+            that.imageFiltersInt64.push(data[i]);       
+            that.imageFiltersInt64Original.push(Object.assign({},data[i]));          
           } else if (data[i].variable_type == "float64") {
             that.imageFiltersFloat64.push(data[i]);
+            that.imageFiltersFloat64Original.push(Object.assign({},data[i]));
           }
           that.imageVariables.push(data[i].variable)
           that.variableValuesVisibility.set(data[i].variable, false)
@@ -212,7 +217,8 @@ export class ImagesListComponent implements OnInit {
     }
     for (let i = 0; i < this.imageFiltersInt64.length; i++) {
       let currentFilter = this.imageFiltersInt64[i]
-      if (currentFilter.min || currentFilter.max) {
+      let currentFilterOriginal = this.imageFiltersInt64Original[i]    
+      if ((currentFilter.min! > currentFilterOriginal.min!) || (currentFilter.max!<currentFilterOriginal.max!)) {
         if (this.filterExpression.length >0) this.filterExpression += ";"
         this.filterExpression += currentFilter.variable;
         this.filterExpression += "="
@@ -223,7 +229,8 @@ export class ImagesListComponent implements OnInit {
     }
     for (let i = 0; i < this.imageFiltersFloat64.length; i++) {
       let currentFilter = this.imageFiltersFloat64[i]
-      if (currentFilter.min || currentFilter.max) {
+      let currentFilterOriginal = this.imageFiltersFloat64Original[i]
+      if ((currentFilter.min! > currentFilterOriginal.min!) || (currentFilter.max!<currentFilterOriginal.max!)) {
         if (this.filterExpression.length >0) this.filterExpression += ";"
         this.filterExpression += currentFilter.variable;
         this.filterExpression += "="
