@@ -144,3 +144,4 @@ node_modules/
 tests/
 data/
 ifbAngular/src/assets/project_images/
+my_secrets.py
