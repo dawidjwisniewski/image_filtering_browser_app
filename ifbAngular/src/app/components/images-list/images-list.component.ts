@@ -78,7 +78,7 @@ export class ImagesListComponent implements OnInit {
 
     this.retrieveFilters(this.route.snapshot.params['projectId']);
 
-    this.getProjectImagesData(this.route.snapshot.params['projectId']);
+    // this.getProjectImagesData(this.route.snapshot.params['projectId']);
   }
 
   getProject(project_id: string): void {
@@ -120,7 +120,7 @@ export class ImagesListComponent implements OnInit {
       that.imageVariables = ['file_name'];
       that.variableValuesVisibility.set('file_name', false)
       for (let i = 0; i < data.length; i++) {
-          console.log(data[i]);
+          // console.log(data[i]);
           if (data[i].variable_type == "object") {
               that.imageFiltersObject.push(data[i]);
           } else if (data[i].variable_type == "bool") {
@@ -148,7 +148,7 @@ export class ImagesListComponent implements OnInit {
         next: data => {
           this.imageFilters = splitFiltersByType(this, data);
           console.log(data);
-          console.log(this.imageFiltersObject);
+          // console.log(this.imageFiltersObject);
         },
         error: error => {
           console.log(error);
@@ -240,7 +240,7 @@ export class ImagesListComponent implements OnInit {
       }
     }
     // this.filterExpression += "#"
-    console.log(this.filterExpression)
+    // console.log(this.filterExpression)
     
     // Querry to backed
     // this.currentProject = {};
@@ -308,10 +308,42 @@ export class ImagesListComponent implements OnInit {
   }
 
   getProjectImagesData(project_id: string): void {
-    this.ifbappService.getProjectImagesData(project_id, this.additionalVariablesExpression)
+    function concatAdditionalVariablesExpression(that: any): string {
+      let expression="";
+      that.variableValuesVisibility.forEach((value: boolean, key: string) => {      
+        if (value == true) {
+          if (expression != ""){
+            expression += ";";
+          }
+          expression += key;                    
+        }        
+      });
+      return expression;
+    }
+    // console.log("variable values visibility:")
+    // console.log(this.variableValuesVisibility)
+    console.log("current expression: "+concatAdditionalVariablesExpression(this))
+    // console.log("Array from entries:")
+    // console.log(Array.from(this.variableValuesVisibility.entries()))
+    // this.variableValuesVisibility.forEach((value: boolean, key: string) => {
+    //   console.log("huh?");
+    //   console.log(key, value);
+    // });
+    // for (let entry of Array.from(this.variableValuesVisibility.entries())) {
+    //   let key = entry[0];
+    //   let value = entry[1];
+    //   console.log("huh?");
+    //   console.log(key+" and value "+value);
+    // }  
+    // for (let [key,value] of Object.entries(this.variableValuesVisibility)) {
+    //   console.log("huh?");
+    //   console.log(key+" and value "+value);
+    // }
+    this.ifbappService.getProjectImagesData(project_id, concatAdditionalVariablesExpression(this))
     .subscribe({
       next: data => {
         this.imageData = data;
+        console.log("additional data to display:");
         console.log(data);
         // console.log("here goes the filtered image:")
         // console.log(this.imageData.filter(s => s.variable == "Type"))
@@ -336,10 +368,11 @@ export class ImagesListComponent implements OnInit {
 
   changeVariableValueVisibility(variable: any): void {
     if (this.variableValuesVisibility.get(variable) == false) {
-      this.variableValuesVisibility.set(variable, true)
+      this.variableValuesVisibility.set(variable, true)      
     } else {
       this.variableValuesVisibility.set(variable, false)      
     }
+    this.getProjectImagesData(this.project_id)
   }
 
 }
