@@ -145,3 +145,14 @@ tests/
 data/
 ifbAngular/src/assets/project_images/
 my_secrets.py
+
+# working not tracked files to delete (or review) later
+Demo nacia/
+check.py
+csv_processing_draft.ipynb
+deploy_cheatsheet.txt
+ifbAngular/angular (copy).json
+ifbAngular/src/app/services/user.service.spec.ts
+ifbAngular/src/app/services/user.service.ts
+serializing_normalized_to_table.ipynb
+todo.txt
